@@ -1,18 +1,36 @@
 % preamble with all definitions
 \include{preamble}
 
-\author{Wes Gohn, Tim Gorringe, Kim Siang Khaw}
-\title{DAQ data structure for the Muon g-2 experiment}
+\author{Wes Gohn, Tim Gorringe, Kim Siang Khaw, David Sweigart}
+\title{\textbf{DAQ data structure for the Muon g-2 experiment}}
 \begin{document}
 
 \maketitle
 
-\abstract{This document outlines the DAQ data structure of the Muon g-2 experiment.}
+\abstract{
+This document outlines the DAQ data structure of the Muon g-2 experiment.
+A detailed list of the MIDAS data bank will be shown and their contents will 
+described.
 
-\section{DAQ output in a nutshell}
-The main DAQ framework for the Muon g-2 experiment is based on MIDAS [cite]. 
+\section{MIDAS DAQ output in a nutshell}
+The main DAQ framework for the Muon g-2 experiment is based on MIDAS [cite]. \\
+{\color{red}Add MIDAS event structure description here and refer to Fig. \ref{fig:MIDASEventStructure}.} 
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.6\textwidth]{pics/MIDASEventStructure.pdf} 
+\caption{MIDAS event structure.}\label{fig:MIDASEventStructure}
+\end{figure}
+
 
 \section{MIDAS Bank list}
+
+Hundred of banks will be stored in each MIDAS event and it is very important to classify them properly.
+{\color{red}Add more descriptions here.}
+
+\subsection{Calorimeter-related banks}
+
+There are 3 fill types for the calorimeter. \verb+Muon+ fill is the typical muon events, laser fill is event dedicated for laser calibration and monitoring events and pedestal fill is trivia from its name. Data from each fill type is identified from the bank name. The muon fill is denoted by "C", the laser fill is denoted by "L" and the pedestal fill is denoted by "P". A summary of the banks is listed in Tab. \ref{tab:calotable}.
 
 \begin{table}[htbp]
 \centering
@@ -30,13 +48,13 @@ CC & LC & PC & GPU timing data \\
 \hline 
 CF & LF & PF & GPU fitted data \\ 
 \hline 
-CH & LH & PH & Per crystal Q-method data (N-th event, end of run) \\ 
+CH & LH & PH & per-crystal Q-method data (N-th event, end of run) \\ 
 \hline 
 CL & LL & PL & Clock data \\ 
 \hline 
 CP & LP & PP & Pedestal\\ 
 \hline 
-CQ & LQ & PQ & Per calo Q-method data (every event) \\ 
+CQ & LQ & PQ & per-calo Q-method data (every event) \\ 
 \hline 
 CR & LR & PR & WFD5 raw data \\ 
 \hline 
@@ -45,8 +63,13 @@ CT & LT & PT & T-method islands \\
 CZ & LZ & PZ & AMC13 CDF trailers \\ 
 \hline 
 \end{tabular} 
+\label{tab:calotable}
 \end{table}
 
+\subsection{Auxiliary detector-related banks}
+
+A separate T/Q-method is needed for auxiliary detectors. Their data banks are denoted with the initial "K".
+A list of these banks are summarized in Tab. \ref{tab:auxtable}.
 
 \begin{table}[htbp]
 \centering
@@ -62,7 +85,10 @@ KQ &  Per aux. detector Q-method data (every event)\\
 KT & T-method data \\
 \hline
 \end{tabular} 
+\label{tab:auxtable}
 \end{table}
+
+\subsection{CCC related banks}
 
 \begin{table}[htbp]
 \centering
@@ -83,40 +109,57 @@ TTCZ & AMC13 Trailer \\
 
 This section details contents of each MIDAS bank. 
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{pics/AMC13ToDAQ.pdf} 
-\caption{Data structure for AMC13 to DAQ.}\label{fig:AMC13ToDAQ}
-\end{figure}
+\subsection*{CA (LA, PA) and CZ (LZ, PZ) banks}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{pics/RiderToAMC13.pdf} 
+\includegraphics[width=0.85\textwidth]{pics/AMC13ToDAQ.pdf} 
+\caption{Data structure for AMC13 to DAQ. The first 2 64-bit words are stored in the CA (LA, PA) bank.}\label{fig:AMC13ToDAQ}
+\end{figure}
+
+\subsection*{CB (LB, PB) banks}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{pics/RiderToAMC13.pdf} 
 \caption{Data structure for Rider to AMC13.}\label{fig:RiderToAMC13}
 \end{figure}
 
+\subsection*{CR (LR, PR) banks}
+
+This is the bank for the WFD5 payload.
+
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{pics/RiderData.pdf} 
+\includegraphics[width=0.85\textwidth]{pics/RiderData.pdf} 
 \caption{Data structure for Rider.}\label{fig:RiderData}
 \end{figure}
 
+\subsection*{C? (L?, P?) banks}
+
+This is the bank for the WFD5 payload in the asynchronous mode.
+
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{pics/AsyncRiderData.pdf} 
+\includegraphics[width=0.85\textwidth]{pics/AsyncRiderData.pdf} 
 \caption{Data structure for asynchronous mode for Rider.}\label{fig:AsyncRiderData}
 \end{figure}
 
+\subsection*{CT (LT, PT) banks}
+
+{\color{red}This place is reserved for T-method (chopped island) bank.}
+
+\subsection*{TTCA, TTCR, TTCZ banks}
+
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{pics/EncoderFC7.pdf} 
+\includegraphics[width=0.85\textwidth]{pics/EncoderFC7.pdf} 
 \caption{Data structure for encoder FC7.}\label{fig:EncoderFC7}
 \end{figure}
 
-
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{pics/FanoutFC7.pdf} 
+\includegraphics[width=0.85\textwidth]{pics/FanoutFC7.pdf} 
 \caption{Data structure for fanout FC7.}\label{fig:FanoutFC7}
 \end{figure}
 
