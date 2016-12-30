@@ -1,7 +1,7 @@
 % preamble with all definitions
 \include{preamble}
 
-\author{Wes Gohn, Tim Gorringe, Kim Siang Khaw, David Sweigart}
+\author{Wes Gohn, Tim Gorringe, Ran Hong, Kim Siang Khaw, David Sweigart}
 \title{\textbf{DAQ data structure for the Muon g-2 experiment}}
 \begin{document}
 
@@ -10,7 +10,10 @@
 \abstract{
 This document outlines the DAQ data structure of the Muon g-2 experiment.
 A detailed list of the MIDAS data bank will be shown and their contents will 
-described.
+described.}
+
+\tableofcontents
+\newpage
 
 \section{MIDAS DAQ output in a nutshell}
 The main DAQ framework for the Muon g-2 experiment is based on MIDAS [cite]. \\
@@ -30,7 +33,7 @@ Hundred of banks will be stored in each MIDAS event and it is very important to 
 
 \subsection{Calorimeter-related banks}
 
-There are 3 fill types for the calorimeter. \verb+Muon+ fill is the typical muon events, laser fill is event dedicated for laser calibration and monitoring events and pedestal fill is trivia from its name. Data from each fill type is identified from the bank name. The muon fill is denoted by "C", the laser fill is denoted by "L" and the pedestal fill is denoted by "P". A summary of the banks is listed in Tab. \ref{tab:calotable}.
+There are 3 fill types for the calorimeter. \verb+Muon+ fill is the typical muon events, laser fill is event dedicated for laser calibration and monitoring events and pedestal fill is trivia from its name. Data from each fill type is identified from the bank name. The muon fill is denoted by ``\textbf{C}", the laser fill is denoted by ``\textbf{L}" and the pedestal fill is denoted by ``\textbf{P}". A summary of the banks is listed in Tab. \ref{tab:calotable}.
 
 \begin{table}[htbp]
 \centering
@@ -68,7 +71,7 @@ CZ & LZ & PZ & AMC13 CDF trailers \\
 
 \subsection{Auxiliary detector-related banks}
 
-A separate T/Q-method is needed for auxiliary detectors. Their data banks are denoted with the initial "K".
+A separate T/Q-method is needed for auxiliary detectors. Their data banks are denoted with the initial ``\textbf{K}".
 A list of these banks are summarized in Tab. \ref{tab:auxtable}.
 
 \begin{table}[htbp]
@@ -102,14 +105,53 @@ TTCR & CCC AMC13 Payload\\
 TTCZ & AMC13 Trailer \\
 \hline
 \end{tabular} 
+\label{tab:ccctable}
 \end{table}
 
+
+\subsection{Field related banks}
+
+Overall instructions: \\
+
+All field-team banks are filled once per event.
+For many field-team banks, a c struct is defined in the \verb+field_struct.hh+ file, accessible for all frontends and unpackers. Programmers should able to cast the read-out bank (array of bytes) onto a pointer of the corresponding struct. A midas bank can be an entire struct (like \textbf{TLNP}, \textbf{ABPR}, etc) or a array of structs (like \textbf{GALI}). A list of these banks are summarized in Tab. \ref{tab:fieldtable}.
+
+
+\begin{table}[htbp]
+\centering
+\caption{MIDAS bank list for the magnetic field related data.}
+\begin{tabular}{|c|c|p{11cm}|}
+\hline
+System & Name & Description \\
+\hline
+Fixed probe & FXPR & Fixed probe, header + NMR waveforms \\
+\hline
+\multirow{4}{*}{Trolley} & TLNP & Trolley NMR Pulse, header + NMR waveforms\\
+\cline{2-3}
+& TLBC &  Trolley Barcode, header + Barcode waveforms \\
+\cline{2-3}
+& TLMN & Trolley Monitors (temperatures, voltages and pressure), header + voltage waveforms \\
+\cline{2-3}
+& GALI &  Galil (trolley and garage) data, positions + velocities + control voltages + tensions\\
+\hline
+Absolute probes &  ABPR &
+Absolute probe (spherical probe and plunging probe are using the same bank), header + NMR waveforms \\ 
+\hline
+Flux gate & FLUX & Flux gate, fluxgate waveforms \\
+\hline
+Surface coil & SFCL & Surface coil, current readouts\\
+\hline
+\end{tabular} 
+\label{tab:fieldtable}
+\end{table}
 
 \section{Bank contents}
 
 This section details contents of each MIDAS bank. 
 
-\subsection*{CA (LA, PA) and CZ (LZ, PZ) banks}
+\subsection{Calorimeter-related banks}
+
+\subsubsection*{CA (LA, PA) and CZ (LZ, PZ) banks}
 
 \begin{figure}[htbp]
 \centering
@@ -117,7 +159,7 @@ This section details contents of each MIDAS bank.
 \caption{Data structure for AMC13 to DAQ. The first 2 64-bit words are stored in the CA (LA, PA) bank.}\label{fig:AMC13ToDAQ}
 \end{figure}
 
-\subsection*{CB (LB, PB) banks}
+\subsubsection*{CB (LB, PB) banks}
 
 \begin{figure}[htbp]
 \centering
@@ -125,7 +167,7 @@ This section details contents of each MIDAS bank.
 \caption{Data structure for Rider to AMC13.}\label{fig:RiderToAMC13}
 \end{figure}
 
-\subsection*{CR (LR, PR) banks}
+\subsubsection*{CR (LR, PR) banks}
 
 This is the bank for the WFD5 payload.
 
@@ -135,7 +177,7 @@ This is the bank for the WFD5 payload.
 \caption{Data structure for Rider.}\label{fig:RiderData}
 \end{figure}
 
-\subsection*{C? (L?, P?) banks}
+\subsubsection*{C? (L?, P?) banks}
 
 This is the bank for the WFD5 payload in the asynchronous mode.
 
@@ -145,11 +187,20 @@ This is the bank for the WFD5 payload in the asynchronous mode.
 \caption{Data structure for asynchronous mode for Rider.}\label{fig:AsyncRiderData}
 \end{figure}
 
-\subsection*{CT (LT, PT) banks}
+\subsubsection*{CT (LT, PT) banks}
 
 {\color{red}This place is reserved for T-method (chopped island) bank.}
 
-\subsection*{TTCA, TTCR, TTCZ banks}
+
+\subsection{Auxiliary detector-related banks}
+
+\subsubsection*{KH and KQ banks}
+
+\subsubsection*{KT bank}
+
+\subsection{CCC related banks}
+
+\subsubsection*{TTCA, TTCR, TTCZ banks}
 
 \begin{figure}[htbp]
 \centering
@@ -164,7 +215,73 @@ This is the bank for the WFD5 payload in the asynchronous mode.
 \end{figure}
 
 
-\section{C++ Parser}
-Muon g-2 offline analysis framework relies on parsers in the gm2parser namespace hosted under repository gm2unpacker to decode the data.
+\subsection{Field related banks}
+
+\subsubsection*{FXPR bank}
+
+
+
+\begin{table}[htbp]
+\centering
+\caption{MIDAS bank list for the magnetic field related data.}
+\begin{tabular}{|c|c|c|c|p{4cm}|c|}
+\hline
+start word index & type      & array length       & field name & content                                                          & struct name \\
+\hline
+0                & Double\_t & num\_ch            & sys\_clock & system clock                                                     & fixed\_t                    \\
+\hline
+4*num\_ch        & Double\_t & num\_ch            & gps\_clock & gps clock                                                        &                             \\
+\hline
+8*num\_ch        & Double\_t & num\_ch            & dev\_clock & device clock                                                     &                             \\
+\hline
+12*num\_ch       & Double\_t & num\_ch            & snr        & signal to noise ratio                                            &                             \\
+\hline
+16*num\_ch       & Double\_t & num\_ch            & len        & length of each wave form                                         &                             \\
+\hline
+20*num\_ch       & Double\_t & num\_ch            & freq       & frequency extracted                                              &                             \\
+\hline
+24*num\_ch       & Double\_t & num\_ch            & ferr       & frequency error                                                  &                             \\
+\hline
+28*num\_ch       & Double\_t & num\_ch            & freq\_zc   & frequency extracted, zero crossing                               &                             \\
+\hline
+32*num\_ch       & Double\_t & num\_ch            & ferr\_zc   & frequency error, zero crossing                                   &                             \\
+\hline
+36*num\_ch       & UShort\_t & num\_ch            & health     & health indicator of probes                                       &                             \\
+\hline
+37*num\_ch       & UShort\_t & num\_ch            & method     & frequency extraction method                                      &                             \\
+\hline
+38*num\_ch       & UShort\_t & num\_ch * rec\_len & trace      & NMR waveforms: Waveform\_Ch1 + Waveform\_Ch2 + … + Waveform\_Ch6 &     \\    
+\hline
+\end{tabular} 
+\label{tab:fxprtable}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Hard-coded macros in the FXPR bank.}
+\begin{tabular}{|c|c|c|}
+\hline
+Name in the code	& Name in this doc &	Value \\
+\hline
+NMR\_NUM\_FIXED\_PROBES & num\_ch & 378 \\
+\hline
+NMR\_FID\_LENGTH\_RECORD & rec\_len & 10000 \\
+\hline
+\end{tabular} 
+\label{tab:fxprmacro}
+\end{table}
+
+\section{Parsers for MIDAS bank data}
+Muon g-2 offline analysis framework relies on parsers in the gm2parser namespace hosted under repository gm2unpackers to decode the data. To checkout the codes, 
+
+\begin{Verbatim}[frame=single]
+git clone ssh://p-gm2dqm@cdcvs.fnal.gov/cvs/projects/gm2unpackers
+\end{Verbatim}
+%
+Alternatively, you can also use 
+\begin{Verbatim}[frame=single]
+mrb g gm2dqm
+\end{Verbatim}
+in our g-2 environment.
 
 \end{document}
