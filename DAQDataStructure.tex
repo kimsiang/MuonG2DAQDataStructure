@@ -16,20 +16,19 @@ described.}
 \newpage
 
 \section{MIDAS DAQ output in a nutshell}
-The main DAQ framework for the Muon g-2 experiment is based on MIDAS [cite]. \\
-{\color{red}Add MIDAS event structure description here and refer to Fig. \ref{fig:MIDASEventStructure}.} 
+The main DAQ framework for the Muon g-2 experiment is based on MIDAS [cite]. 
+MIDAS event structure is as depicted in Fig.~\ref{fig:MIDASEventStructure}.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{pics/MIDASEventStructure.pdf} 
-\caption{MIDAS event structure.}\label{fig:MIDASEventStructure}
+\caption{MIDAS event structure. Each event has its header that is followed by the bank header. Then all the banks will appear according the defined order.}\label{fig:MIDASEventStructure}
 \end{figure}
 
 
 \section{MIDAS Bank list}
 
-Hundred of banks will be stored in each MIDAS event and it is very important to classify them properly.
-{\color{red}Add more descriptions here.}
+Hundred of banks will be stored in each MIDAS event and it is very important to classify them properly. At the moment they can be grouped into 4 categories: calorimeter, auxiliary detector, CCC and magnetic field. Naming of these banks will be described in this section and their contents will be explained in the next section.
 
 \subsection{Calorimeter-related banks}
 
@@ -40,8 +39,8 @@ There are 3 fill types for the calorimeter. \verb+Muon+ fill is the typical muon
 \caption{MIDAS bank list for the calorimetry data.}
 \begin{tabular}{|c|c|c|c|}
 \hline 
-\multicolumn{3}{|c|}{Bank name}  & \multirow{2}{*}{Description} \\ \cline{1-3}
-muon fill& laser fill & pedestal fill & \\
+muon fill& laser fill & pedestal fill  & \multirow{2}{*}{Description} \\ \cline{1-3}
+\multicolumn{3}{|c|}{Bank name} & \\
 \hline
 CA & LA & PA & AMC13 Header \\ 
 \hline 
@@ -92,6 +91,9 @@ KT & T-method data \\
 \end{table}
 
 \subsection{CCC related banks}
+
+This is the bank housing information regarding the CCC system based on FC7.
+A list of these banks are summarized in Tab. \ref{tab:ccctable}.
 
 \begin{table}[htbp]
 \centering
@@ -169,7 +171,7 @@ This section details contents of each MIDAS bank.
 
 \subsubsection*{CR (LR, PR) banks}
 
-This is the bank for the WFD5 payload.
+This is the bank for the full WFD5 payload.
 
 \begin{figure}[htbp]
 \centering
@@ -219,37 +221,35 @@ This is the bank for the WFD5 payload in the asynchronous mode.
 
 \subsubsection*{FXPR bank}
 
-
-
 \begin{table}[htbp]
 \centering
-\caption{MIDAS bank list for the magnetic field related data.}
+\caption{MIDAS bank structure for the FXPR bank.}
 \begin{tabular}{|c|c|c|c|p{4cm}|c|}
 \hline
 start word index & type      & array length       & field name & content                                                          & struct name \\
 \hline
-0                & Double\_t & num\_ch            & sys\_clock & system clock                                                     & fixed\_t                    \\
-\hline
+0                & Double\_t & num\_ch            & sys\_clock & system clock                                                     & \multirow{12}{*}{fixed\_t}                  \\
+\cline{1-5}
 4*num\_ch        & Double\_t & num\_ch            & gps\_clock & gps clock                                                        &                             \\
-\hline
+\cline{1-5}
 8*num\_ch        & Double\_t & num\_ch            & dev\_clock & device clock                                                     &                             \\
-\hline
+\cline{1-5}
 12*num\_ch       & Double\_t & num\_ch            & snr        & signal to noise ratio                                            &                             \\
-\hline
+\cline{1-5}
 16*num\_ch       & Double\_t & num\_ch            & len        & length of each wave form                                         &                             \\
-\hline
+\cline{1-5}
 20*num\_ch       & Double\_t & num\_ch            & freq       & frequency extracted                                              &                             \\
-\hline
+\cline{1-5}
 24*num\_ch       & Double\_t & num\_ch            & ferr       & frequency error                                                  &                             \\
-\hline
+\cline{1-5}
 28*num\_ch       & Double\_t & num\_ch            & freq\_zc   & frequency extracted, zero crossing                               &                             \\
-\hline
+\cline{1-5}
 32*num\_ch       & Double\_t & num\_ch            & ferr\_zc   & frequency error, zero crossing                                   &                             \\
-\hline
+\cline{1-5}
 36*num\_ch       & UShort\_t & num\_ch            & health     & health indicator of probes                                       &                             \\
-\hline
+\cline{1-5}
 37*num\_ch       & UShort\_t & num\_ch            & method     & frequency extraction method                                      &                             \\
-\hline
+\cline{1-5}
 38*num\_ch       & UShort\_t & num\_ch * rec\_len & trace      & NMR waveforms: Waveform\_Ch1 + Waveform\_Ch2 + … + Waveform\_Ch6 &     \\    
 \hline
 \end{tabular} 
@@ -269,6 +269,61 @@ NMR\_FID\_LENGTH\_RECORD & rec\_len & 10000 \\
 \hline
 \end{tabular} 
 \label{tab:fxprmacro}
+\end{table}
+
+
+\subsubsection*{TLNP bank}
+
+\begin{table}[htbp]
+\centering
+\caption{MIDAS bank structure for the TLNP bank.}
+\begin{tabular}{|c|c|c|c|p{4cm}|c|}
+\hline
+start word index &	type	& array length	&field name	&content	& struct name \\
+\hline
+0	& ULong64\_t & 1 & gps\_clock & Time stamp of the first NMR sample	& \multirow{3}{*}{trollye\_nmr\_t}   \\ 
+\cline{1-5}
+4	&UShort\_t	& 1 & probe\_index	&probe index	 & \\ 
+\cline{1-5}
+5	&UShort\_t	&1 & length&	length of the NMR waveform	 & \\ 
+\hline
+6	&Short\_t & nmr\_len &	trace	&Trolley Probe NMR wavefrom	 & \\ 
+\hline
+\end{tabular} 
+\label{tab:tlnp}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Hard-coded macros in the TLNP bank.}
+\begin{tabular}{|c|c|c|}
+\hline
+Name in the code	& Name in this doc &	Value \\
+\hline
+TRLY\_NMR\_LENGTH	 & nmr\_len & 24000 \\
+\hline
+\end{tabular} 
+\label{tab:tlnpmacro}
+\end{table}
+
+
+\subsubsection*{TLBC bank}
+
+\begin{table}[htbp]
+\centering
+\caption{MIDAS bank structure for the TLBC bank.}
+\begin{tabular}{|c|c|c|c|p{4cm}|c|}
+\hline
+start word & index & type & array length & field name	content & struct name \\ 
+\hline
+0 & ULong64\_t & 1 & gps\_clock & Time stamp of the first barcode sample & \multirow{3}{*}{trolley\_barcode\_t} \\
+\hline
+4 & UShort\_t & 1 & length\_per\_ch & length of the barcode waveform per channel \\ 
+\hline	
+5 & UShort\_t	& bc\_ch*bc\_len & traces &	Barcode wavefroms: Waveform\_Ch1 + Waveform\_Ch2 + … + Waveform\_Ch6	 \\
+\hline
+\end{tabular} 
+\label{tab:tlbc}
 \end{table}
 
 \section{Parsers for MIDAS bank data}
