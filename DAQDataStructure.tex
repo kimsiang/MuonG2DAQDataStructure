@@ -176,10 +176,10 @@ This is the bank for the full WFD5 payload.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{pics/RiderData.pdf} 
-\caption{Data structure for Rider.}\label{fig:RiderData}
+\caption{Data structure for the WFD5 raw payload.}\label{fig:RiderData}
 \end{figure}
 
-\subsubsection*{C? (L?, P?) banks}
+\subsubsection*{C? (L?, P?) banks, TBD}
 
 This is the bank for the WFD5 payload in the asynchronous mode.
 
@@ -189,16 +189,55 @@ This is the bank for the WFD5 payload in the asynchronous mode.
 \caption{Data structure for asynchronous mode for Rider.}\label{fig:AsyncRiderData}
 \end{figure}
 
+
 \subsubsection*{CT (LT, PT) banks}
 
-{\color{red}This place is reserved for T-method (chopped island) bank.}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{pics/CTBankFormat.pdf} 
+\caption{Data structure for the CT bank (T-method chopped islands).}\label{fig:CTBankFormat}
+\end{figure}
 
+\subsubsection*{CH (LH, PH) banks}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{pics/CHBankFormat.pdf} 
+\caption{Data structure for the CH bank (calo segment histograms).}\label{fig:CHBankFormat}
+\end{figure}
+
+\subsubsection*{CQ (LQ, PQ) banks}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{pics/CQBankFormat.pdf} 
+\caption{Data structure for the CQ bank (calo sum histograms).}\label{fig:CQBankFormat}
+\end{figure}
+
+\subsubsection*{CP (LP, PP) banks}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{pics/CPBankFormat.pdf} 
+\caption{Data structure for the CP bank (T-method pedestals).}\label{fig:CPBankFormat}
+\end{figure}
+
+\subsubsection*{CC (LC, PC) banks}
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{pics/CCBankFormat.pdf} 
+\caption{Data structure for the CC bank (calo performance).}\label{fig:CCBankFormat}
+\end{figure}
 
 \subsection{Auxiliary detector-related banks}
 
 \subsubsection*{KH and KQ banks}
+These two banks have the same format as the CH and CQ banks.
 
 \subsubsection*{KT bank}
+This bank has the same format as the CT bank.
 
 \subsection{CCC related banks}
 
@@ -281,7 +320,7 @@ NMR\_FID\_LENGTH\_RECORD & rec\_len & 10000 \\
 \hline
 start word index &	type	& array length	&field name	&content	& struct name \\
 \hline
-0	& ULong64\_t & 1 & gps\_clock & Time stamp of the first NMR sample	& \multirow{3}{*}{trollye\_nmr\_t}   \\ 
+0	& ULong64\_t & 1 & gps\_clock & Time stamp of the first NMR sample	& \multirow{3}{*}{trolley\_nmr\_t}   \\ 
 \cline{1-5}
 4	&UShort\_t	& 1 & probe\_index	&probe index	 & \\ 
 \cline{1-5}
@@ -298,7 +337,7 @@ start word index &	type	& array length	&field name	&content	& struct name \\
 \caption{Hard-coded macros in the TLNP bank.}
 \begin{tabular}{|c|c|c|}
 \hline
-Name in the code	& Name in this doc &	Value \\
+Name in the code	& Name in this doc & Value \\
 \hline
 TRLY\_NMR\_LENGTH	 & nmr\_len & 24000 \\
 \hline
@@ -317,10 +356,10 @@ TRLY\_NMR\_LENGTH	 & nmr\_len & 24000 \\
 start word & index & type & array length & field name	content & struct name \\ 
 \hline
 0 & ULong64\_t & 1 & gps\_clock & Time stamp of the first barcode sample & \multirow{3}{*}{trolley\_barcode\_t} \\
-\hline
-4 & UShort\_t & 1 & length\_per\_ch & length of the barcode waveform per channel \\ 
-\hline	
-5 & UShort\_t	& bc\_ch*bc\_len & traces &	Barcode wavefroms: Waveform\_Ch1 + Waveform\_Ch2 + … + Waveform\_Ch6	 \\
+\cline{1-5}
+4 & UShort\_t & 1 & length\_per\_ch & length of the barcode waveform per channel & \\ 
+\cline{1-5}	
+5 & UShort\_t	& bc\_ch*bc\_len & traces &	Barcode wavefroms: Waveform\_Ch1 + Waveform\_Ch2 + … + Waveform\_Ch6	 &\\
 \hline
 \end{tabular} 
 \label{tab:tlbc}
