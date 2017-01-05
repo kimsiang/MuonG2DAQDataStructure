@@ -266,17 +266,18 @@ This is the bank for the WFD5 payload in the asynchronous mode. The detailed str
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.85\textwidth]{pics/AsyncRiderData.pdf} 
+\includegraphics[width=0.9\textwidth]{pics/AsyncRiderData.pdf} 
 \caption{Data structure for asynchronous mode for Rider.}\label{fig:AsyncRiderData}
 \end{figure}
 
 \subsubsection*{CF banks}
 
-This is the bank for GPU fitted results. The detailed structure is shown in Tab.~\ref{tab:cftable}.
+This is the bank for GPU fitted results. The bank starts with ``unsigned int" that is the number of segments. Then for each of those segments there is a block like this:
+an ``unsigned int" which is the number of pulses and then \textit{nPulses} blocks of \textit{pulseFinderResult} struct. The struct is shown in Tab.~\ref{tab:cftable}.
 
 \begin{table}[htbp]
 \centering
-\caption{MIDAS bank structure for the CF bank.}
+\caption{Format of the struct pulseFinderResult.}
 \begin{tabular}{|c|c|c|c|}
 \hline
 start word index & type & field name & content  \\
@@ -325,13 +326,13 @@ The data format of the encoder and fanout FC7 are shown in Fig.~\ref{fig:Encoder
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.85\textwidth]{pics/EncoderFC7.pdf} 
+\includegraphics[width=0.9\textwidth]{pics/EncoderFC7.pdf} 
 \caption{Data structure for encoder FC7.}\label{fig:EncoderFC7}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.85\textwidth]{pics/FanoutFC7.pdf} 
+\includegraphics[width=0.9\textwidth]{pics/FanoutFC7.pdf} 
 \caption{Data structure for fanout FC7.}\label{fig:FanoutFC7}
 \end{figure}
 
