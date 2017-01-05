@@ -25,7 +25,7 @@ MIDAS event structure is as depicted in Fig.~\ref{fig:MIDASEventStructure}.
 \caption{MIDAS event structure. Each event has its header that is followed by the bank header. Then all the banks will appear according the defined order.}\label{fig:MIDASEventStructure}
 \end{figure}
 
-
+\newpage
 \section{MIDAS Bank list}
 
 Hundred of banks will be stored in each MIDAS event and it is very important to classify them properly. At the moment they can be grouped into 4 categories: calorimeter, auxiliary detector, CCC and magnetic field. Naming of these banks will be described in this section and their contents will be explained in the next section.
@@ -147,6 +147,7 @@ Surface coil & SFCL & Surface coil, current readouts\\
 \label{tab:fieldtable}
 \end{table}
 
+\newpage
 \section{Bank contents}
 
 This section details contents of each MIDAS bank. 
@@ -155,6 +156,9 @@ This section details contents of each MIDAS bank.
 
 \subsubsection*{CA (LA, PA) and CZ (LZ, PZ) banks}
 
+This is the bank for the AMC13 to DAQ header information.
+The first 64-bit word is the CDF header and the next 64-bit word is the payload header.
+
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{pics/AMC13ToDAQ.pdf} 
@@ -162,6 +166,8 @@ This section details contents of each MIDAS bank.
 \end{figure}
 
 \subsubsection*{CB (LB, PB) banks}
+
+This is the bank for the WFD5 to AMC13 header information. 
 
 \begin{figure}[htbp]
 \centering
@@ -179,6 +185,58 @@ This is the bank for the full WFD5 payload.
 \caption{Data structure for the WFD5 raw payload.}\label{fig:RiderData}
 \end{figure}
 
+
+\subsubsection*{CT (LT, PT) banks}
+
+This is the bank for calorimeter T-method chopped islands.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{pics/CTBankFormat.pdf} 
+\caption{Data structure for the CT bank (T-method chopped islands).}\label{fig:CTBankFormat}
+\end{figure}
+
+\subsubsection*{CH (LH, PH) banks}
+
+This is the bank for calorimeter segment histograms.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{pics/CHBankFormat.pdf} 
+\caption{Data structure for the CH bank (calo segment histograms).}\label{fig:CHBankFormat}
+\end{figure}
+
+\subsubsection*{CQ (LQ, PQ) banks}
+
+This is the bank for calorimeter sum histograms.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{pics/CQBankFormat.pdf} 
+\caption{Data structure for the CQ bank (calo sum histograms).}\label{fig:CQBankFormat}
+\end{figure}
+
+\subsubsection*{CP (LP, PP) banks}
+
+This is the bank for calorimeter pedestals.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{pics/CPBankFormat.pdf} 
+\caption{Data structure for the CP bank (T-method pedestals).}\label{fig:CPBankFormat}
+\end{figure}
+
+\subsubsection*{CC (LC, PC) banks}
+
+This is the bank for the calorimeter DAQ performance related information.
+It has information like tcp timing and gpu timing.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{pics/CCBankFormat.pdf} 
+\caption{Data structure for the CC bank (calo performance).}\label{fig:CCBankFormat}
+\end{figure}
+
 \subsubsection*{C? (L?, P?) banks, TBD}
 
 This is the bank for the WFD5 payload in the asynchronous mode.
@@ -187,48 +245,6 @@ This is the bank for the WFD5 payload in the asynchronous mode.
 \centering
 \includegraphics[width=0.85\textwidth]{pics/AsyncRiderData.pdf} 
 \caption{Data structure for asynchronous mode for Rider.}\label{fig:AsyncRiderData}
-\end{figure}
-
-
-\subsubsection*{CT (LT, PT) banks}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.85\textwidth]{pics/CTBankFormat.pdf} 
-\caption{Data structure for the CT bank (T-method chopped islands).}\label{fig:CTBankFormat}
-\end{figure}
-
-\subsubsection*{CH (LH, PH) banks}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.85\textwidth]{pics/CHBankFormat.pdf} 
-\caption{Data structure for the CH bank (calo segment histograms).}\label{fig:CHBankFormat}
-\end{figure}
-
-\subsubsection*{CQ (LQ, PQ) banks}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.85\textwidth]{pics/CQBankFormat.pdf} 
-\caption{Data structure for the CQ bank (calo sum histograms).}\label{fig:CQBankFormat}
-\end{figure}
-
-\subsubsection*{CP (LP, PP) banks}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.85\textwidth]{pics/CPBankFormat.pdf} 
-\caption{Data structure for the CP bank (T-method pedestals).}\label{fig:CPBankFormat}
-\end{figure}
-
-\subsubsection*{CC (LC, PC) banks}
-
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.85\textwidth]{pics/CCBankFormat.pdf} 
-\caption{Data structure for the CC bank (calo performance).}\label{fig:CCBankFormat}
 \end{figure}
 
 \subsection{Auxiliary detector-related banks}
@@ -259,6 +275,7 @@ This bank has the same format as the CT bank.
 \subsection{Field related banks}
 
 \subsubsection*{FXPR bank}
+This is the bank for fixed probes. It consists of a header and NMR waveforms.
 
 \begin{table}[htbp]
 \centering
@@ -313,6 +330,8 @@ NMR\_FID\_LENGTH\_RECORD & rec\_len & 10000 \\
 
 \subsubsection*{TLNP bank}
 
+This is the bank for Trolley NMR pulses. It consists of a header and NMR waveforms.
+
 \begin{table}[htbp]
 \centering
 \caption{MIDAS bank structure for the TLNP bank.}
@@ -347,6 +366,7 @@ TRLY\_NMR\_LENGTH	 & nmr\_len & 24000 \\
 
 
 \subsubsection*{TLBC bank}
+This is the bank for Trolley barcode readers. It consists of a header and barcode waveforms.
 
 \begin{table}[htbp]
 \centering
@@ -365,6 +385,7 @@ start word & index & type & array length & field name	content & struct name \\
 \label{tab:tlbc}
 \end{table}
 
+\newpage
 \section{Parsers for MIDAS bank data}
 Muon g-2 offline analysis framework relies on parsers in the gm2parser namespace hosted under repository gm2unpackers to decode the data. To checkout the codes, 
 
@@ -377,5 +398,7 @@ Alternatively, you can also use
 mrb g gm2dqm
 \end{Verbatim}
 in our g-2 environment.
+
+These parsers are written in C++ and are being used in the \textit{art} producer modules. They can also be used in your standalone C++ codes, if you wish to.
 
 \end{document}
