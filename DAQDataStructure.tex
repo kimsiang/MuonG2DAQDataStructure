@@ -17,16 +17,6 @@ described.}
 
 \section{Introduction}
 
-\subsection{MIDAS DAQ output in a nutshell}
-The main DAQ framework for the Muon g-2 experiment is based on MIDAS~\cite{Midas}. 
-MIDAS event structure is as depicted in Fig.~\ref{fig:MIDASEventStructure}.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.6\textwidth]{pics/MIDASEventStructure.pdf} 
-\caption{MIDAS event structure. Each event has its header that is followed by the bank header. Then all the banks will appear according the defined order.}\label{fig:MIDASEventStructure}
-\end{figure}
-
 \subsection{Data unpacking in a nutshell}
 
 The basic idea of data unpacking is to convert compact DAQ information stored in MIDAS banks to well-structured data products, as depicted in Fig.~\ref{fig:DataUnpacking}. Several unpackers are used to decode the information stored in MIDAS banks and the outputs are stored in different data products which are basically structs in C++ language.
@@ -35,6 +25,17 @@ The basic idea of data unpacking is to convert compact DAQ information stored in
 \centering
 \includegraphics[width=0.6\textwidth]{pics/DataUnpacking.pdf} 
 \caption{Simplified diagram of the flow of the data unpacking.}\label{fig:DataUnpacking}
+\end{figure}
+
+
+\subsection{MIDAS DAQ output in a nutshell}
+The main DAQ framework for the Muon g-2 experiment is based on MIDAS~\cite{Midas}. 
+MIDAS event structure is as depicted in Fig.~\ref{fig:MIDASEventStructure}.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.6\textwidth]{pics/MIDASEventStructure.pdf} 
+\caption{MIDAS event structure. Each event has its header that is followed by the bank header. Then all the banks will appear according the defined order.}\label{fig:MIDASEventStructure}
 \end{figure}
 
 \newpage
@@ -81,6 +82,7 @@ CZ & LZ & PZ & AMC13 CDF trailers \\
 \end{table}
 
 Since each bank has to be named exactly four characters, the last 2 characters denoted the calorimeter number, e.g. \textbf{CT03} means the T-method bank from calorimeter number 3.
+Hence the number 01-24 are reserved for the calorimeters and 25 is reserved for the laser system.
 
 \subsection{Auxiliary detector-related banks}
 
