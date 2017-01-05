@@ -4,6 +4,7 @@
 \author{Wes Gohn, Tim Gorringe, Ran Hong, Kim Siang Khaw\thanks{Corresponding author, khaw84@uw.edu}, David Sweigart}
 \title{\textbf{DAQ data structure for the Muon g-2 experiment}}
 \begin{document}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
 
 \maketitle
 
@@ -49,7 +50,7 @@ There are 3 fill types for the calorimeter. \verb+Muon+ fill is the typical muon
 \begin{table}[htbp]
 \centering
 \caption{MIDAS bank list for the calorimetry data.}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|c|c|c|C{8cm}|}
 \hline 
 muon fill& laser fill & pedestal fill  & \multirow{2}{*}{Description} \\ \cline{1-3}
 \multicolumn{3}{|c|}{Bank name} & \\
@@ -85,13 +86,14 @@ Hence the number 01-24 are reserved for the calorimeters and 25 is reserved for 
 
 \subsection{Auxiliary detector-related banks}
 
-A separate T/Q-method is needed for auxiliary detectors. Their data banks are denoted with the initial ``\textbf{K}".
-A list of these banks are summarized in Tab. \ref{tab:auxtable}.
+Systems that fall into the auxiliary detector category are the kickers, quadrupoles, IBMS, T0 counter and fiber harps. Depending on the length of the signal, two different types of digitizers will be used to digitize these signals: Cornell WFD5 and CANE 1742 digitizers. 
+A separate T/Q-method is needed for auxiliary detectors. Their data banks are denoted with the initial ``\textbf{K}". A list of these banks are summarized in Tab. \ref{tab:auxtable}. The last 2 characters of the bank name will be decided soon.
+
 
 \begin{table}[htbp]
 \centering
-\caption{MIDAS bank list for auxiliary T/Q data. This is mainly for the fiber harps, quads and kickers.}
-\begin{tabular}{|c|c|}
+\caption{MIDAS bank list for auxiliary T/Q data. This is mainly for the fiber harps, quads, kickers and IBMS.}
+\begin{tabular}{|c|C{8cm}|}
 \hline 
 Bank name  & Description \\
 \hline
@@ -101,11 +103,11 @@ KQ &  Per aux. detector Q-method data (every event)\\
 \hline
 KT & T-method data \\
 \hline
+IBMS & IBMS waveforms \\
+\hline
 \end{tabular} 
 \label{tab:auxtable}
 \end{table}
-
-The last 2 characters of the bank name will be decided soon.
 
 \subsection{CCC related banks}
 
@@ -137,7 +139,7 @@ For many field-team banks, a c struct is defined in the \verb+field_struct.hh+ f
 \begin{table}[htbp]
 \centering
 \caption{MIDAS bank list for the magnetic field related data.}
-\begin{tabular}{|c|c|p{11cm}|}
+\begin{tabular}{|c|c|C{10cm}|}
 \hline
 System & Name & Description \\
 \hline
@@ -270,7 +272,7 @@ This is the bank for the WFD5 payload in the asynchronous mode. The detailed str
 
 \subsection{Auxiliary detector-related banks}
 
-Systems that fall into the auxiliary detector category are the kickers, quadrupoles, IBMS, T0 counter and fiber harps. Depending on the length of the signal, two different types of digitizers will be used to digitize these signals: Cornell WFD5 and CANE 1742 digitizers. This section will be updated once decision is finalized.
+This section will be updated once decision is finalized.
 
 \subsubsection*{KH and KQ banks}
 These two banks have the same format as the CH and CQ banks.
@@ -312,7 +314,7 @@ Structure of the FXPR bank is summarized in Tab.~\ref{tab:fxprtable} and its mac
 \begin{table}[htbp]
 \centering
 \caption{MIDAS bank structure for the FXPR bank.}
-\begin{tabular}{|c|c|c|c|p{4cm}|c|}
+\begin{tabular}{|c|c|c|c|C{4cm}|c|}
 \hline
 start word index & type      & array length       & field name & content                                                          & struct name \\
 \hline
@@ -368,7 +370,7 @@ Structure of the TLNP bank is summarized in Tab.~\ref{tab:tlnptable} and its mac
 \begin{table}[htbp]
 \centering
 \caption{MIDAS bank structure for the TLNP bank.}
-\begin{tabular}{|c|c|c|c|p{4cm}|c|}
+\begin{tabular}{|c|c|c|c|C{4cm}|c|}
 \hline
 start word index &	type	& array length	&field name	&content	& struct name \\
 \hline
@@ -405,7 +407,7 @@ Structure of the TLBC bank is summarized in Tab.~\ref{tab:tlbctable} and its mac
 \begin{table}[htbp]
 \centering
 \caption{MIDAS bank structure for the TLBC bank.}
-\begin{tabular}{|c|c|c|c|p{4cm}|c|}
+\begin{tabular}{|c|c|c|c|C{4cm}|c|}
 \hline
 start word & index & type & array length & field name	content & struct name \\ 
 \hline
@@ -441,7 +443,7 @@ This is the bank for Trolley monitors. It consists of information like temperatu
 \begin{table}[htbp]
 \centering
 \caption{MIDAS bank structure for the TLMN bank.}
-\begin{tabular}{|p{2cm}|c|p{1.5cm}|c|p{4cm}|c|}
+\begin{tabular}{|C{2cm}|c|C{1.5cm}|c|C{4cm}|c|}
 \hline
 start word index & type       & array length & field name               & content                                                & struct name \\
 \hline
@@ -527,7 +529,7 @@ start word index & type           & array length & field name & content  & struc
 \begin{table}[htbp]
 \centering
 \caption{Format of the struct galil\_data\_t.}
-\begin{tabular}{|c|c|c|c|p{5cm}|}
+\begin{tabular}{|c|c|c|c|C{5cm}|}
 \hline
 start word index & type & array length & field name	 & content \\
 \hline
@@ -565,7 +567,7 @@ This is the bank for absolute probe data. Both spherical probe and plunging prob
 \begin{table}[htbp]
 \centering
 \caption{MIDAS bank structure for the ABPR bank.}
-\begin{tabular}{|c|c|c|c|p{3cm}|c|}
+\begin{tabular}{|c|c|c|c|C{3cm}|c|}
 \hline
 start word index & type       & array length & field name        & content                      & struct name \\
 \hline
@@ -593,7 +595,7 @@ This is the bank for the fluxgate. It has information like the fluxgate waveform
 \begin{table}[htbp]
 \centering
 \caption{MIDAS bank structure for the FLUX bank.}
-\begin{tabular}{|c|c|c|c|p{3cm}|c|}
+\begin{tabular}{|c|c|c|c|C{3cm}|c|}
 \hline
 start word index & type    & array length        & field name & content                                                                  & struct name \\
 \hline
@@ -627,7 +629,7 @@ This is the bank for the surface coil. It has the information like current reado
 \begin{table}[htbp]
 \centering
 \caption{MIDAS bank structure for the SFCL bank.}
-\begin{tabular}{|c|c|c|c|p{3cm}|c|}
+\begin{tabular}{|c|c|c|c|C{3cm}|c|}
 \hline
 start word index & type      & array length & field name & content               & struct name \\
 \hline
