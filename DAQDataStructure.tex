@@ -179,7 +179,7 @@ The first 64-bit word is the CDF header and the next 64-bit word is the payload 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{pics/AMC13ToDAQ.pdf} 
-\caption{Data structure for AMC13 to DAQ. The first 2 64-bit words are stored in the CA (LA, PA) bank.}\label{fig:AMC13ToDAQ}
+\caption{Data structure for AMC13 to DAQ. The first two 64-bit words are stored in the CA (LA, PA) banks and the last two 64-bit words are stored in the CZ (LZ, PZ) banks.}\label{fig:AMC13ToDAQ}
 \end{figure}
 
 \subsubsection*{CZ (LZ, PZ) banks}
@@ -269,6 +269,37 @@ This is the bank for the WFD5 payload in the asynchronous mode. The detailed str
 \includegraphics[width=0.85\textwidth]{pics/AsyncRiderData.pdf} 
 \caption{Data structure for asynchronous mode for Rider.}\label{fig:AsyncRiderData}
 \end{figure}
+
+\subsubsection*{CF banks}
+
+This is the bank for GPU fitted results. The detailed structure is shown in Tab.~\ref{tab:cftable}.
+
+\begin{table}[htbp]
+\centering
+\caption{MIDAS bank structure for the CF bank.}
+\begin{tabular}{|c|c|c|c|}
+\hline
+start word index & type & field name & content  \\
+\hline
+0	& Float\_t & time & fitted time \\
+\hline
+2	& Float\_t	& phase & fitted phase \\ 
+\hline
+4	& Float\_t	& energy	& 	fitted energy \\ 
+\hline
+6	& Float\_t	& pedestal &  fitted pedestal \\ 
+\hline
+8	& Float\_t	& chi2 &  chi square of the fit \\ 
+\hline
+10	& Float\_t	& pedestal &  fitted pedestal \\ 
+\hline
+12	& Int\_t	& peak\_index &  index of the fitted peak\\ 
+\hline
+13	& Int\_t	& peak\_value &  value of the fitted peak \\ 
+\hline
+\end{tabular} 
+\label{tab:cftable}
+\end{table}
 
 \subsection{Auxiliary detector-related banks}
 
