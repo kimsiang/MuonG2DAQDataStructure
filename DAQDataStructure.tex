@@ -68,6 +68,8 @@ CZ & LZ & PZ & AMC13 CDF trailers \\
 \label{tab:calotable}
 \end{table}
 
+Since each bank has to be named exactly four characters, the last 2 characters denoted the calorimeter number, e.g. \textbf{CT03} means the T-method bank from calorimeter number 3.
+
 \subsection{Auxiliary detector-related banks}
 
 A separate T/Q-method is needed for auxiliary detectors. Their data banks are denoted with the initial ``\textbf{K}".
@@ -90,9 +92,11 @@ KT & T-method data \\
 \label{tab:auxtable}
 \end{table}
 
+The last 2 characters of the bank name will be decided soon.
+
 \subsection{CCC related banks}
 
-This is the bank housing information regarding the CCC system based on FC7.
+This is the bank storing the information regarding the CCC system based on FC7.
 A list of these banks are summarized in Tab. \ref{tab:ccctable}.
 
 \begin{table}[htbp]
@@ -113,9 +117,7 @@ TTCZ & AMC13 Trailer \\
 
 \subsection{Field related banks}
 
-Overall instructions: \\
-
-All field-team banks are filled once per event.
+All field-team banks are filled once per event and the definition of an event is different from the one of the $\omega_{a}$ related banks.
 For many field-team banks, a c struct is defined in the \verb+field_struct.hh+ file, accessible for all frontends and unpackers. Programmers should able to cast the read-out bank (array of bytes) onto a pointer of the corresponding struct. A midas bank can be an entire struct (like \textbf{TLNP}, \textbf{ABPR}, etc) or a array of structs (like \textbf{GALI}). A list of these banks are summarized in Tab. \ref{tab:fieldtable}.
 
 
@@ -150,14 +152,14 @@ Surface coil & SFCL & Surface coil, current readouts\\
 \newpage
 \section{Bank contents}
 
-This section details contents of each MIDAS bank. 
+This section details contents of each MIDAS bank. All the banks are packed in 32-bit word integer regardless of the original format. 
 
 \subsection{Calorimeter-related banks}
 
-\subsubsection*{CA (LA, PA) and CZ (LZ, PZ) banks}
+\subsubsection*{CA (LA, PA) banks}
 
 This is the bank for the AMC13 to DAQ header information.
-The first 64-bit word is the CDF header and the next 64-bit word is the payload header.
+The first 64-bit word is the CDF header and the next 64-bit word is the payload header as shown in Fig.~\ref{fig:AMC13ToDAQ}.
 
 \begin{figure}[htbp]
 \centering
@@ -165,9 +167,15 @@ The first 64-bit word is the CDF header and the next 64-bit word is the payload 
 \caption{Data structure for AMC13 to DAQ. The first 2 64-bit words are stored in the CA (LA, PA) bank.}\label{fig:AMC13ToDAQ}
 \end{figure}
 
+\subsubsection*{CZ (LZ, PZ) banks}
+
+This is the bank for the AMC13 to DAQ trailer information.
+The first 64-bit word is the last 64-bit word of the payload block and the next 64-bit word is the CDF trailer as shown in Fig.~\ref{fig:AMC13ToDAQ}.
+
+
 \subsubsection*{CB (LB, PB) banks}
 
-This is the bank for the WFD5 to AMC13 header information. 
+This is the bank for the WFD5 to AMC13 header information as shown in Fig.~\ref{fig:RiderToAMC13}.
 
 \begin{figure}[htbp]
 \centering
@@ -177,7 +185,7 @@ This is the bank for the WFD5 to AMC13 header information.
 
 \subsubsection*{CR (LR, PR) banks}
 
-This is the bank for the full WFD5 payload.
+This is the bank for the full WFD5 payload as shown in Fig.~\ref{fig:RiderData}. Due to the huge data size of raw payload, a pre-scale of about 1000 event is usually being set in the MIDAS ODB.
 
 \begin{figure}[htbp]
 \centering
@@ -188,7 +196,7 @@ This is the bank for the full WFD5 payload.
 
 \subsubsection*{CT (LT, PT) banks}
 
-This is the bank for calorimeter T-method chopped islands.
+This is the bank for calorimeter T-method chopped islands. A collection of 54 islands from 54 crystals/segments are extracted per trigger. The detailed structure is shown in Fig.~\ref{fig:CTBankFormat}.
 
 \begin{figure}[htbp]
 \centering
@@ -198,7 +206,7 @@ This is the bank for calorimeter T-method chopped islands.
 
 \subsubsection*{CH (LH, PH) banks}
 
-This is the bank for calorimeter segment histograms.
+This is the bank for calorimeter segment histograms. Histogram from each segment is being summed to itself each fill and is flushed out every N-th event. The detailed structure is shown in Fig.~\ref{fig:CHBankFormat}.
 
 \begin{figure}[htbp]
 \centering
@@ -208,7 +216,7 @@ This is the bank for calorimeter segment histograms.
 
 \subsubsection*{CQ (LQ, PQ) banks}
 
-This is the bank for calorimeter sum histograms.
+This is the bank for calorimeter sum histograms. Histograms from all segments are summed together and decimated, and then are being flushed out every fill. The detailed structure is shown in Fig.~\ref{fig:CQBankFormat}.
 
 \begin{figure}[htbp]
 \centering
@@ -218,7 +226,7 @@ This is the bank for calorimeter sum histograms.
 
 \subsubsection*{CP (LP, PP) banks}
 
-This is the bank for calorimeter pedestals.
+This is the bank for calorimeter pedestals. The detailed structure is shown in Fig.~\ref{fig:CPBankFormat}.
 
 \begin{figure}[htbp]
 \centering
@@ -229,7 +237,7 @@ This is the bank for calorimeter pedestals.
 \subsubsection*{CC (LC, PC) banks}
 
 This is the bank for the calorimeter DAQ performance related information.
-It has information like tcp timing and gpu timing.
+It has information like tcp timing and gpu timing. The detailed structure is shown in Fig.~\ref{fig:CCBankFormat}.
 
 \begin{figure}[htbp]
 \centering
@@ -237,9 +245,9 @@ It has information like tcp timing and gpu timing.
 \caption{Data structure for the CC bank (calo performance).}\label{fig:CCBankFormat}
 \end{figure}
 
-\subsubsection*{C? (L?, P?) banks, TBD}
+\subsubsection*{CR (LR, PR) banks, asynchronous}
 
-This is the bank for the WFD5 payload in the asynchronous mode.
+This is the bank for the WFD5 payload in the asynchronous mode. The detailed structure is shown in Fig.~\ref{fig:AsyncRiderData}.
 
 \begin{figure}[htbp]
 \centering
@@ -258,6 +266,11 @@ This bank has the same format as the CT bank.
 \subsection{CCC related banks}
 
 \subsubsection*{TTCA, TTCR, TTCZ banks}
+
+TTCA bank will have the same format as the CA bank in the calorimeter-related data since the uTCA crate has the same data format. TTCZ on the other hand will have the same format as the CZ bank.
+
+There are two types of TTCR banks for the FC7 - encoder and fanout. 
+The data format of the encoder and fanout FC7 are shown in Fig.~\ref{fig:EncoderFC7} and Fig.~\ref{fig:FanoutFC7}. respectively.
 
 \begin{figure}[htbp]
 \centering
@@ -398,7 +411,13 @@ Alternatively, you can also use
 mrb g gm2dqm
 \end{Verbatim}
 in our g-2 environment.
+%
+These parsers are written in C++ and are being used in the \textit{art} producer modules. They can also be used in your standalone C++ codes, if you wish to. The parsers are located at
+%
+\begin{Verbatim}[frame=single]
+gm2unpackers/calo/parsers
+\end{Verbatim}
+at the moment for both calorimeter and CCC related information. This document will be updated accordingly once they are reorganized.
 
-These parsers are written in C++ and are being used in the \textit{art} producer modules. They can also be used in your standalone C++ codes, if you wish to.
 
 \end{document}
