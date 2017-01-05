@@ -15,14 +15,26 @@ described.}
 \tableofcontents
 \newpage
 
-\section{MIDAS DAQ output in a nutshell}
-The main DAQ framework for the Muon g-2 experiment is based on MIDAS [cite]. 
+\section{Introduction}
+
+\subsection{MIDAS DAQ output in a nutshell}
+The main DAQ framework for the Muon g-2 experiment is based on MIDAS~\cite{Midas}. 
 MIDAS event structure is as depicted in Fig.~\ref{fig:MIDASEventStructure}.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{pics/MIDASEventStructure.pdf} 
 \caption{MIDAS event structure. Each event has its header that is followed by the bank header. Then all the banks will appear according the defined order.}\label{fig:MIDASEventStructure}
+\end{figure}
+
+\subsection{Data unpacking in a nutshell}
+
+The basic idea of data unpacking is to convert compact DAQ information stored in MIDAS banks to well-structured data products, as depicted in Fig.~\ref{fig:DataUnpacking}. Several unpackers are used to decode the information stored in MIDAS banks and the outputs are stored in different data products which are basically structs in C++ language.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.6\textwidth]{pics/DataUnpacking.pdf} 
+\caption{Simplified diagram of the flow of the data unpacking.}\label{fig:DataUnpacking}
 \end{figure}
 
 \newpage
@@ -289,6 +301,7 @@ The data format of the encoder and fanout FC7 are shown in Fig.~\ref{fig:Encoder
 
 \subsubsection*{FXPR bank}
 This is the bank for fixed probes. It consists of a header and NMR waveforms.
+Structure of the FXPR bank is summarized in Tab.~\ref{tab:fxprtable} and its macros are summarized in Tab.~\ref{tab:fxprmacro}.
 
 \begin{table}[htbp]
 \centering
@@ -344,6 +357,7 @@ NMR\_FID\_LENGTH\_RECORD & rec\_len & 10000 \\
 \subsubsection*{TLNP bank}
 
 This is the bank for Trolley NMR pulses. It consists of a header and NMR waveforms.
+Structure of the TLNP bank is summarized in Tab.~\ref{tab:tlnptable} and its macros are summarized in Tab.~\ref{tab:tlnpmacro}.
 
 \begin{table}[htbp]
 \centering
@@ -361,7 +375,7 @@ start word index &	type	& array length	&field name	&content	& struct name \\
 6	&Short\_t & nmr\_len &	trace	&Trolley Probe NMR wavefrom	 & \\ 
 \hline
 \end{tabular} 
-\label{tab:tlnp}
+\label{tab:tlnptable}
 \end{table}
 
 \begin{table}[htbp]
@@ -380,6 +394,7 @@ TRLY\_NMR\_LENGTH	 & nmr\_len & 24000 \\
 
 \subsubsection*{TLBC bank}
 This is the bank for Trolley barcode readers. It consists of a header and barcode waveforms.
+Structure of the TLBC bank is summarized in Tab.~\ref{tab:tlbctable} and its macros are summarized in Tab.~\ref{tab:tlbcmacro}.
 
 \begin{table}[htbp]
 \centering
@@ -395,8 +410,247 @@ start word & index & type & array length & field name	content & struct name \\
 5 & UShort\_t	& bc\_ch*bc\_len & traces &	Barcode wavefroms: Waveform\_Ch1 + Waveform\_Ch2 + … + Waveform\_Ch6	 &\\
 \hline
 \end{tabular} 
-\label{tab:tlbc}
+\label{tab:tlbctable}
 \end{table}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Hard-coded macros in the TLBC bank.}
+\begin{tabular}{|c|c|c|}
+\hline
+Name in the code	& Name in this doc & Value \\
+\hline
+TRLY\_BARCODE\_LENGTH	& bc\_len & 3000 \\
+\hline
+TRLY\_BARCODE\_CHANNELS & bc\_ch & 6 \\
+\hline
+\end{tabular} 
+\label{tab:tlbcmacro}
+\end{table}
+
+\subsubsection*{TLMN bank}
+This is the bank for Trolley monitors. It consists of information like temperatures, voltages and pressures. Structure of the TLMN bank is summarized in Tab.~\ref{tab:tlmntable} and its macros are summarized in Tab.~\ref{tab:tlmnmacro}.
+
+\begin{table}[htbp]
+\centering
+\caption{MIDAS bank structure for the TLMN bank.}
+\begin{tabular}{|p{2cm}|c|p{1.5cm}|c|p{4cm}|c|}
+\hline
+start word index & type       & array length & field name               & content                                                & struct name \\
+\hline
+0                & ULong64\_t & 1            & gps\_clock\_cycle\_start & Time stamp of the measurement cycle                    & \multirow{21}{*}{trolley\_monitor\_t}         \\ 
+\cline{1-5}
+4                & UInt\_t    & 1            & PMonitorVal              & Pressure Monitor readout value                         &                             \\
+\cline{1-5}
+6                & Uint\_t    & 1            & PMonitorTemp             & Pressure Monitor temperature                           &                             \\
+\cline{1-5}
+8                & Uint\_t    & 1            & RFPower1                 & RF Power monitor 1                                     &                             \\
+\cline{1-5}
+10               & Uint\_t    & 1            & RFPower2                 & RF Power monitor 2                                     &                             \\
+\cline{1-5}
+12               & Uint\_t    & 1            & NMRCheckSum              & NMR waveform check sum, calculated by trolley inerface &                             \\
+\cline{1-5}
+14               & Uint\_t    & 1            & FrameCheckSum            & Frame data check sum, calculated by trolley interface  &                             \\
+\cline{1-5}
+16               & Uint\_t    & 1            & FrameSum                 & Frame data sum calculated by DAQ                       &                             \\
+\cline{1-5}
+18               & Uint\_t    & 1            & FrameIndex               & Frame index                                            &                             \\
+\cline{1-5}
+20               & UShort\_t  & 1            & StatusBits               & (Bit 5-7)Reserved                                      &                             \\
+\cline{1-5}
+21               & UShort\_t  & 1            & TMonitorIn               & Temperature monitor, interia                           &                             \\
+\cline{1-5}
+22               & UShort\_t  & 1            & TMonitorExt1             & Temperature monitor, exteria 1                         &                             \\
+\cline{1-5}
+23               & UShort\_t  & 1            & TMonitorExt2             & Temperature monitor, exteria 2                         &                             \\
+\cline{1-5}
+24               & UShort\_t  & 1            & TMonitorExt3             & Temperature monitor, exteria 3                         &                             \\
+\cline{1-5}
+25               & UShort\_t  & 1            & V1Min                    & Voltage Monitor 1, mininum                             &                             \\
+\cline{1-5}
+26               & UShort\_t  & 1            & V1Max                    & Voltage Monitor 1, maximum                             &                             \\
+\cline{1-5}
+27               & UShort\_t  & 1            & V2Min                    & Voltage Monitor 2, mininum                             &                             \\
+\cline{1-5}
+28               & UShort\_t  & 1            & V2Max                    & Voltage Monitor 2, maximum                             &                             \\
+\cline{1-5}
+29               & UShort\_t  & 1            & length\_per\_ch          & waveform length per channel for the voltage monitors   &                             \\
+\cline{1-5}
+30               & UShort\_t  & mn\_len      & trace\_VMonitor1         & waveform of voltage monitor 1                          &                             \\
+\cline{1-5}
+30+mn\_len       & UShort\_t  & mn\_len      & trace\_VMonitor2         & waveform of voltage monitor 2                         &     \\
+\hline
+\end{tabular} 
+\label{tab:tlmntable}
+\end{table}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Hard-coded macros in the TLMN bank.}
+\begin{tabular}{|c|c|c|}
+\hline
+Name in the code	& Name in this doc & Value \\
+\hline
+TRLY\_MONITOR\_LENGTH & mn\_len & 3000 \\
+\hline
+\end{tabular} 
+\label{tab:tlmnmacro}
+\end{table}
+
+
+\subsubsection*{GALI bank}
+
+This is the bank for trolley and garage data. It has information like the trolley positions and velocities. Structure of the GALI bank is summarized in Tab.~\ref{tab:galitable1} and \ref{tab:galitable2}, and its macros are summarized in Tab.~\ref{tab:galimacro}.
+
+
+\begin{table}[htbp]
+\centering
+\caption{MIDAS bank structure for the GALI bank.}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+start word index & type           & array length & field name & content  & struct name \\
+\hline
+0                & galil\_data\_t & group\_size  & -          & Array of structs: galil\_data\_t & galil\_data\_t              \\
+\hline
+\end{tabular}
+\label{tab:galitable1}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Format of the struct galil\_data\_t.}
+\begin{tabular}{|c|c|c|c|p{5cm}|}
+\hline
+start word index & type & array length & field name	 & content \\
+\hline
+0  & ULong64\_t & 1 & TimeStamp  & time stamp of the readout                         \\
+\hline
+4  & Int\_t     & 2 & Tensions   & Tensions of the fishing line and the signal cable \\
+\hline
+8  & Int\_t     & 3 & Positions  & Positions: Motor 1, Motor 2 and Garage            \\
+\hline
+14 & Int\_t     & 3 & Velocities & Velocities: Motor 1, Motor 2 and Garage           \\
+\hline
+20 & Int\_t     & 3 & OutputVs   & Output voltages: Motor 1, Motor 2 and Garage  \\
+\hline
+\end{tabular}
+\label{tab:galitable2}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Hard-coded macros in the GALI bank.}
+\begin{tabular}{|c|c|c|}
+\hline
+Name in the code	& Name in this doc & Value \\
+\hline
+GALILREADGROUPSIZE & group\_size & 50 \\
+\hline
+\end{tabular} 
+\label{tab:galimacro}
+\end{table}
+
+\subsubsection*{ABPR bank}
+
+This is the bank for absolute probe data. Both spherical probe and plunging probe are using the same bank. It has information like the header and NMR waveforms. Structure of the ABPR bank is summarized in Tab.~\ref{tab:abprtable}.
+
+\begin{table}[htbp]
+\centering
+\caption{MIDAS bank structure for the ABPR bank.}
+\begin{tabular}{|c|c|c|c|p{3cm}|c|}
+\hline
+start word index & type       & array length & field name        & content                      & struct name \\
+\hline
+0                & ULong64\_t & 1            & time\_stamp       & Time stamp of the NMR sample & \multirow{5}{*}{absolute\_nmr\_info\_t}      \\
+\cline{1-5}
+4                & Uint\_t    & 1            & length            & probe index                  &                             \\
+\cline{1-5}
+6                & Uint\_t    & 4            & position          & length of the NMR waveform   &                             \\
+\cline{1-5}
+14               & UShort\_t  & 1            & flay\_run\_number & Trolley Probe NMR wavefrom   &                             \\
+\cline{1-5}
+15               & UShort\_t  & 1            & probe\_index      &                              &                             \\
+\hline
+16               & UShort\_t  & length       & -                 & NMR waveform\footnotemark &    \\
+\hline
+\end{tabular}
+\label{tab:abprtable}
+\end{table}
+\footnotetext{Note: the length of the NMR waveform is not fixed from event to event. For each event, its length is determined by the "length" field of the "absolute\_nmr\_info\_t" struct in the header section.}
+
+\subsubsection*{FLUX bank}
+
+This is the bank for the fluxgate. It has information like the fluxgate waveforms. Structure of the FLUX bank is summarized in Tab.~\ref{tab:fluxtable} and its macros are summarized in Tab.~\ref{tab:fluxmacro}.
+
+\begin{table}[htbp]
+\centering
+\caption{MIDAS bank structure for the FLUX bank.}
+\begin{tabular}{|c|c|c|c|p{3cm}|c|}
+\hline
+start word index & type    & array length        & field name & content                                                                  & struct name \\
+\hline
+0                & float64 & num\_ch*period*rate & -          & Flux gate wave forms for all channels: Waveform\_ch1 + Waveform\_ch2 + … &     \\
+\hline        
+\end{tabular}
+\label{tab:fluxtable}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Hard-coded macros in the FLUX bank.}
+\begin{tabular}{|c|c|c|}
+\hline
+Name in the code    & Name in this doc & Value \\
+\hline
+FLUX\_NUM\_CHANNELS & num\_ch          & 9     \\
+\hline
+FLUX\_TRACE\_PERIOD & period           & 60    \\
+\hline
+FLUX\_RATE          & rate             & 8000 \\
+\hline
+\end{tabular} 
+\label{tab:fluxmacro}
+\end{table}
+
+\subsubsection*{SFCL bank}
+
+This is the bank for the surface coil. It has the information like current readouts from the surface coils. Structure of the SFCL bank is summarized in Tab.~\ref{tab:sfcltable} and its macros are summarized in Tab.~\ref{tab:sfclmacro}.
+
+\begin{table}[htbp]
+\centering
+\caption{MIDAS bank structure for the SFCL bank.}
+\begin{tabular}{|c|c|c|c|p{3cm}|c|}
+\hline
+start word index & type      & array length & field name & content               & struct name \\
+\hline
+0                & Double\_t & num\_coil    & sys\_clock & system clock          & \multirow{4}{*}{surface\_coil\_t}     \\
+\cline{1-5}
+4*num\_coil      & Double\_t & num\_coil    & gps\_clock & gps clock             &                             \\
+\cline{1-5}
+8*num\_coil      & Double\_t & num\_coil    & top\_board & top board currents    &                             \\
+\cline{1-5}
+12*num\_coil     & Double\_t & num\_coil    & bot\_board & bottom board currents & \\
+\hline        
+\end{tabular}
+\label{tab:sfcltable}
+\end{table}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Hard-coded macros in the SFCL bank.}
+\begin{tabular}{|c|c|c|}
+\hline
+Name in the code    & Name in this doc & Value \\
+\hline
+SC\_NUM\_COILS &  num\_coil & 100 \\
+\hline
+\end{tabular} 
+\label{tab:sfclmacro}
+\end{table}
+%%%%%%%%%%%%%%%%%%%
 
 \newpage
 \section{Parsers for MIDAS bank data}
@@ -419,5 +673,11 @@ gm2unpackers/calo/parsers
 \end{Verbatim}
 at the moment for both calorimeter and CCC related information. This document will be updated accordingly once they are reorganized.
 
+\begin{thebibliography}{9}
+\bibitem{Midas}
+TRIUMF MIDAS homepage, accessed Jan 5, 2017. 
+\url{https://midas.triumf.ca/MidasWiki/index.php/Main_Page}
+
+\end{thebibliography}
 
 \end{document}
