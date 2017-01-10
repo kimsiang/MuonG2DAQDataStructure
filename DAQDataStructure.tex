@@ -21,6 +21,7 @@ described.}
 \subsection{Data unpacking in a nutshell}
 
 The basic idea of data unpacking is to convert compact DAQ information stored in MIDAS banks to well-structured data products, as depicted in Fig.~\ref{fig:DataUnpacking}. Several unpackers are used to decode the information stored in MIDAS banks and the outputs are stored in different data products which are basically structs in C++ language.
+A compact list of the Midas bank - Data unpacker - Data product is summarized in Sec.~\ref{sec:cheatsheet}.
 
 \begin{figure}[htbp]
 \centering
@@ -171,16 +172,16 @@ This section details contents of each MIDAS bank. All the banks are packed in 32
 
 \subsection{Calorimeter-related banks}
 
-\subsubsection*{CA (LA, PA) banks}
-
-This is the bank for the AMC13 to DAQ header information.
-The first 64-bit word is the CDF header and the next 64-bit word is the payload header as shown in Fig.~\ref{fig:AMC13ToDAQ}.
-
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{pics/AMC13ToDAQ.pdf} 
 \caption{Data structure for AMC13 to DAQ. The first two 64-bit words are stored in the CA (LA, PA) banks and the last two 64-bit words are stored in the CZ (LZ, PZ) banks.}\label{fig:AMC13ToDAQ}
 \end{figure}
+
+\subsubsection*{CA (LA, PA) banks}
+
+This is the bank for the AMC13 to DAQ header information.
+The first 64-bit word is the CDF header and the next 64-bit word is the payload header as shown in Fig.~\ref{fig:AMC13ToDAQ}.
 
 \subsubsection*{CZ (LZ, PZ) banks}
 
@@ -272,8 +273,8 @@ This is the bank for the WFD5 payload in the asynchronous mode. The detailed str
 
 \subsubsection*{CF banks}
 
-This is the bank for GPU fitted results. The bank starts with ``unsigned int" that is the number of segments. Then for each of those segments there is a block like this:
-an ``unsigned int" which is the number of pulses and then \textit{nPulses} blocks of \textit{pulseFinderResult} struct. The struct is shown in Tab.~\ref{tab:cftable}.
+This is the bank for GPU fitted results. The bank starts with an ``unsigned int" that is the number of segments. Then for each of those segments there is a block like this:
+an ``unsigned int" which is the number of pulses and then \textit{nPulses} blocks of \textit{pulseFinderResult} struct. The member variables in this struct is shown in Tab.~\ref{tab:cftable}.
 
 \begin{table}[htbp]
 \centering
@@ -711,7 +712,48 @@ These parsers are written in C++ and are being used in the \textit{art} producer
 \begin{Verbatim}[frame=single]
 gm2unpackers/calo/parsers
 \end{Verbatim}
-at the moment for both calorimeter and CCC related information. This document will be updated accordingly once they are reorganized.
+at the moment for both calorimeter and CCC related information. This section will be updated accordingly once they are reorganized.
+
+
+\section{Cheat sheet for data unpacking}\label{sec:cheatsheet}
+
+A complete list of midas bank to unpacker to data product is summarized in Tab.~\ref{tab:cheatsheet}. 
+
+\begin{table}[htbp]
+\centering
+\caption{Midas bank-Data unpacker-Data product relationship table. This is the mapping as of Jan 10, 2017 and will be updated accordingly once the restructuring of the data unpacking is completed.}
+\begin{tabular}{|c|c|c|}
+\hline
+Midas bank & Data unpacker (\textit{art} producer module) & Data product (\textit{struct}) \\
+\hline
+\multirow{3}{*}{CR} & \multirow{3}{*}{RawUnpacker} & gm2calo::RiderArtRecord \\
+& & gm2calo::AMCHeader \\
+& & gm2calo::RiderChannelHeader \\
+\hline
+\multirow{3}{*}{LR, PR} & \multirow{3}{*}{RawUnpacker} & gm2calo::IslandArtRecord \\
+& & gm2calo::AMCHeader \\
+& & gm2calo::RiderChannelHeader \\
+\hline
+\multirow{3}{*}{CR25} & \multirow{3}{*}{LaserRawUnpacker} & gm2calo::RiderArtRecord \\
+& & gm2calo::AMCHeader \\
+& & gm2calo::RiderChannelHeader \\
+\hline
+CT & IslandUnpacker & gm2calo::IslandArtRecord \\
+\hline
+\multirow{2}{*}{CB} & \multirow{2}{*}{HeaderUnpacker} & gm2calo::AMCHeader \\
+\cline{3-3}
+& & gm2calo::CDFHeader \\
+\hline
+CH & CHUnpacker & gm2calo::QHistArtRecord \\
+\hline
+TTCR & FC7Unpacker & gm2calo::FC7Header \\
+\hline
+CF & GpuFitResultUnpacker & gm2calo::FitResultArtRecord \\
+\hline
+\end{tabular} 
+\label{tab:cheatsheet}
+\end{table}
+
 
 \begin{thebibliography}{9}
 \bibitem{Midas}
