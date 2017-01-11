@@ -21,14 +21,13 @@ described.}
 \subsection{Data unpacking in a nutshell}
 
 The basic idea of data unpacking is to convert compact DAQ information stored in MIDAS banks to well-structured data products, as depicted in Fig.~\ref{fig:DataUnpacking}. Several unpackers are used to decode the information stored in MIDAS banks and the outputs are stored in different data products which are basically structs in C++ language.
-A compact list of the Midas bank - Data unpacker - Data product is summarized in Sec.~\ref{sec:cheatsheet}.
+A complete list of the Midas bank - Data unpacker - Data product relationship is summarized in Sec.~\ref{sec:cheatsheet}.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.65\textwidth]{pics/DataUnpacking.pdf} 
 \caption{Simplified diagram of the flow of the data unpacking.}\label{fig:DataUnpacking}
 \end{figure}
-
 
 \subsection{MIDAS DAQ output in a nutshell}
 The main DAQ framework for the Muon g-2 experiment is based on MIDAS~\cite{Midas}. 
