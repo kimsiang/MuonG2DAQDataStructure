@@ -267,7 +267,7 @@ This is the bank for the WFD5 payload in the asynchronous mode. The detailed str
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{pics/AsyncRiderData.pdf} 
-\caption{Data structure for asynchronous mode for Rider.}\label{fig:AsyncRiderData}
+\caption{Data structure for WFD5 asynchronous mode.}\label{fig:AsyncRiderData}
 \end{figure}
 
 \subsubsection*{CF banks}
@@ -321,21 +321,26 @@ This bank will store all the waveforms from CAEN1742. Actual format to be decide
 
 TTCA bank will have the same format as the CA bank in the calorimeter-related data since the uTCA crate has the same data format. TTCZ on the other hand will have the same format as the CZ bank.
 
-There are two types of TTCR banks for the FC7 - encoder and fanout. 
-The data format of the encoder and fanout FC7 are shown in Fig.~\ref{fig:EncoderFC7} and Fig.~\ref{fig:FanoutFC7}. respectively.
+There are two types FC7 -- encoder and fanout, and they share the same data format. 
+The data format of the encoder and fanout FC7 are shown in Fig.~\ref{fig:FC7DataFormat}.
+
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=0.9\textwidth]{pics/EncoderFC7.pdf} 
+%\caption{Data structure for encoder FC7.}\label{fig:EncoderFC7}
+%\end{figure}
+
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=0.9\textwidth]{pics/FanoutFC7.pdf} 
+%\caption{Data structure for fanout FC7.}\label{fig:FanoutFC7}
+%\end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{pics/EncoderFC7.pdf} 
-\caption{Data structure for encoder FC7.}\label{fig:EncoderFC7}
+\includegraphics[width=0.9\textwidth]{pics/FC7DataFormat20170122.pdf} 
+\caption{Data structure for both encoder and fanout FC7.}\label{fig:FC7DataFormat}
 \end{figure}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.9\textwidth]{pics/FanoutFC7.pdf} 
-\caption{Data structure for fanout FC7.}\label{fig:FanoutFC7}
-\end{figure}
-
 
 \subsection{Field related banks}
 
