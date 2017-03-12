@@ -57,19 +57,19 @@ muon fill& laser fill & pedestal fill  & \multirow{2}{*}{Description} \\ \cline{
 \hline
 CA & LA & PA & AMC13 Header \\ 
 \hline 
-CB & LB & PB & WFD5 header \\ 
+CB & - & - & WFD5 header \\ 
 \hline 
 CC & LC & PC & GPU timing data \\ 
 \hline 
-CF & LF & PF & GPU fitted data \\ 
+CF & - & - & GPU fitted data \\ 
 \hline 
-CH & LH & PH & per-crystal Q-method data (N-th event, end of run) \\ 
+CH & - & - & per-crystal Q-method data (N-th event, end of run) \\ 
 \hline 
 CL & LL & PL & Clock data \\ 
 \hline 
-CP & LP & PP & Pedestal\\ 
+CP & - & - & Pedestal\\ 
 \hline 
-CQ & LQ & PQ & per-calo Q-method data (every event) \\ 
+CQ & - & - & per-calo Q-method data (every event) \\ 
 \hline 
 CR & LR & PR & WFD5 raw data \\ 
 \hline 
@@ -188,7 +188,7 @@ This is the bank for the AMC13 to DAQ trailer information.
 The first 64-bit word is the last 64-bit word of the payload block and the next 64-bit word is the CDF trailer as shown in Fig.~\ref{fig:AMC13ToDAQ}.
 
 
-\subsubsection*{CB (LB, PB) banks}
+\subsubsection*{CB banks}
 
 This is the bank for the WFD5 to AMC13 header information as shown in Fig.~\ref{fig:RiderToAMC13}.
 
@@ -209,7 +209,7 @@ This is the bank for the full WFD5 payload as shown in Fig.~\ref{fig:RiderData}.
 \end{figure}
 
 
-\subsubsection*{CT (LT, PT) banks}
+\subsubsection*{CT banks}
 
 This is the bank for calorimeter T-method chopped islands. A collection of 54 islands from 54 crystals/segments are extracted per trigger. The detailed structure is shown in Fig.~\ref{fig:CTBankFormat}.
 
@@ -219,7 +219,7 @@ This is the bank for calorimeter T-method chopped islands. A collection of 54 is
 \caption{Data structure for the CT bank (T-method chopped islands).}\label{fig:CTBankFormat}
 \end{figure}
 
-\subsubsection*{CH (LH, PH) banks}
+\subsubsection*{CH banks}
 
 This is the bank for calorimeter segment histograms. Histogram from each segment is being summed to itself each fill and is flushed out every N-th event. The detailed structure is shown in Fig.~\ref{fig:CHBankFormat}.
 
@@ -229,7 +229,7 @@ This is the bank for calorimeter segment histograms. Histogram from each segment
 \caption{Data structure for the CH bank (calo segment histograms). In this example, the number of samples $= 512$, initial rebin $= 2$, rebin intervals $=4$ and rebin multiplier $=2$.}\label{fig:CHBankFormat}
 \end{figure}
 
-\subsubsection*{CQ (LQ, PQ) banks}
+\subsubsection*{CQ banks}
 
 This is the bank for calorimeter sum histograms. Histograms from all segments are summed together and decimated, and then are being flushed out every fill. The detailed structure is shown in Fig.~\ref{fig:CQBankFormat}.
 
@@ -239,7 +239,7 @@ This is the bank for calorimeter sum histograms. Histograms from all segments ar
 \caption{Data structure for the CQ bank (calo sum histograms).}\label{fig:CQBankFormat}
 \end{figure}
 
-\subsubsection*{CP (LP, PP) banks}
+\subsubsection*{CP banks}
 
 This is the bank for calorimeter pedestals. The detailed structure is shown in Fig.~\ref{fig:CPBankFormat}.
 
@@ -725,22 +725,15 @@ A complete list of midas bank to unpacker to data product is summarized in Tab.~
 
 \begin{table}[htbp]
 \centering
-\caption{Midas bank-Data unpacker-Data product relationship table. This is the mapping as of Jan 10, 2017 and will be updated accordingly once the restructuring of the data unpacking is completed.}
+\caption{Midas bank-Data unpacker-Data product relationship table for a muon fill. This is the mapping as of Jan 10, 2017 and will be updated accordingly once the restructuring of the data unpacking is completed.}
 \begin{tabular}{|c|c|c|}
 \hline
 Midas bank & Data unpacker (\textit{art} producer module) & Data product (\textit{struct}) \\
 \hline
-\multirow{3}{*}{CR} & \multirow{3}{*}{RawBankUnpacker} & gm2calo::RiderArtRecord \\
+\multirow{4}{*}{CR} & \multirow{4}{*}{RawBankUnpacker} & gm2calo::RiderArtRecord \\
 & & gm2calo::AMCHeader \\
 & & gm2calo::RiderChannelHeader \\
-\hline
-\multirow{3}{*}{LR, PR} & \multirow{3}{*}{RawBankUnpacker} & gm2calo::IslandArtRecord \\
-& & gm2calo::AMCHeader \\
-& & gm2calo::RiderChannelHeader \\
-\hline
-\multirow{3}{*}{CR25} & \multirow{3}{*}{LaserRawUnpacker} & gm2calo::RiderArtRecord \\
-& & gm2calo::AMCHeader \\
-& & gm2calo::RiderChannelHeader \\
+& & gm2calo::RiderWaveformHeader \\
 \hline
 CT & IslandUnpacker & gm2calo::IslandArtRecord \\
 \hline
@@ -750,7 +743,9 @@ CT & IslandUnpacker & gm2calo::IslandArtRecord \\
 \hline
 CH & CHUnpacker & gm2calo::QHistArtRecord \\
 \hline
-TTCR & FC7Unpacker & gm2calo::FC7Header \\
+\multirow{2}{*}{TTCR} & \multirow{2}{*}{FC7Unpacker} & gm2ccc::CCCHeader \\
+\cline{3-3}
+& & gm2ccc::CCCArtRecord \\
 \hline
 CF & GpuFitResultUnpacker & gm2calo::FitResultArtRecord \\
 \hline
