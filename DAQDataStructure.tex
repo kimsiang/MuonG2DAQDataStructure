@@ -49,33 +49,32 @@ There are 3 fill types for the calorimeter. \verb+Muon+ fill is the typical muon
 
 \begin{table}[htbp]
 \centering
-\caption{MIDAS bank list for the calorimetry data.}
-\begin{tabular}{|c|c|c|C{8cm}|}
+\caption{MIDAS bank list for the calorimetry data for different trigger types (TT).}
+\begin{tabular}{|c|c|c|c|c|}
 \hline 
-muon fill& laser fill & pedestal fill  & \multirow{2}{*}{Description} \\ \cline{1-3}
-\multicolumn{3}{|c|}{Bank name} & \\
+Muon TT & Laser TT  & Pedestal TT  & Async TT & Description\\
 \hline
-CA & LA & PA & AMC13 Header \\ 
+CA & LA & PA &  AA & AMC13 Header \\ 
 \hline 
-CB & - & - & WFD5 header \\ 
+CB & - & - & - & WFD5 header \\ 
 \hline 
-CC & LC & PC & GPU timing data \\ 
+CC & LC & PC & AC & GPU timing data \\ 
 \hline 
-CF & - & - & GPU fitted data \\ 
+CF & - & - & - & GPU fitted data \\ 
 \hline 
-CH & - & - & per-crystal Q-method data (N-th event, end of run) \\ 
+CH & - & - & - & per-calo diagnostic data \\ 
 \hline 
-CL & LL & PL & Clock data \\ 
+CL & LL & PL & AL & Clock data \\ 
 \hline 
-CP & - & - & Pedestal\\ 
+CP & - & - & - & Pedestal\\ 
 \hline 
-CQ & - & - & per-calo Q-method data (every event) \\ 
+CQ & - & - & - & per-crystal Q-method data \\ 
 \hline 
-CR & LR & PR & WFD5 raw data \\ 
+CR & LR & PR & AR & WFD5 raw data \\ 
 \hline 
-CT & - & - & T-method islands \\ 
+CT & - & - & - & T-method islands \\ 
 \hline 
-CZ & LZ & PZ & AMC13 CDF trailers \\ 
+CZ & LZ & PZ & AZ & AMC13 CDF trailers \\ 
 \hline 
 \end{tabular} 
 \label{tab:calotable}
