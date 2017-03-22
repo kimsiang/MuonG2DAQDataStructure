@@ -722,10 +722,20 @@ A complete list of midas bank to unpacker to data product is summarized in Tab.~
 
 \begin{table}[htbp]
 \centering
-\caption{Midas bank-Data unpacker-Data product relationship table for a muon fill. This is the mapping as of Jan 10, 2017 and will be updated accordingly once the restructuring of the data unpacking is completed.}
+\caption{Midas bank-Data unpacker-Data product relationship table for a muon fill. This is the mapping as of Mar 22, 2017 and will be updated accordingly once the restructuring of the data unpacking is completed.}
 \begin{tabular}{|c|c|c|}
 \hline
 Midas bank & Data unpacker (\textit{art} producer module) & Data product (\textit{struct}) \\
+\hline
+CA & UTCAUnpacker & gm2calo::CDFHeader \\
+\hline
+\multirow{2}{*}{CB} & \multirow{2}{*}{HeaderUnpacker} & gm2calo::AMCHeader \\
+\cline{3-3}
+& & gm2calo::CDFHeader \\
+\hline
+CF & GpuFitResultUnpacker & gm2calo::FitResultArtRecord \\
+\hline
+CQ & CQUnpacker & gm2calo::QHistArtRecord \\
 \hline
 \multirow{4}{*}{CR} & \multirow{4}{*}{RawBankUnpacker} & gm2calo::RiderArtRecord \\
 & & gm2calo::AMCHeader \\
@@ -734,17 +744,9 @@ Midas bank & Data unpacker (\textit{art} producer module) & Data product (\texti
 \hline
 CT & IslandUnpacker & gm2calo::IslandArtRecord \\
 \hline
-\multirow{2}{*}{CB} & \multirow{2}{*}{HeaderUnpacker} & gm2calo::AMCHeader \\
-\cline{3-3}
-& & gm2calo::CDFHeader \\
-\hline
-CH & CHUnpacker & gm2calo::QHistArtRecord \\
-\hline
 \multirow{2}{*}{TTCR} & \multirow{2}{*}{FC7Unpacker} & gm2ccc::CCCHeader \\
 \cline{3-3}
 & & gm2ccc::CCCArtRecord \\
-\hline
-CF & GpuFitResultUnpacker & gm2calo::FitResultArtRecord \\
 \hline
 \end{tabular} 
 \label{tab:cheatsheet}
